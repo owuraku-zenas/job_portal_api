@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyResumeController;
 use App\Http\Controllers\JobsController;
@@ -22,8 +23,35 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('jobs', JobsController::class);
-Route::apiResource('resumes', ResumeController::class);
-Route::apiResource('companies', CompanyController::class);
-Route::apiResource('companies.resumes', CompanyResumeController::class);
-Route::apiResource('users.jobs', CompanyResumeController::class);
+/**
+ * 
+ * Auth Routes
+ * 
+ */
+Route::group([
+    'prefix' => 'auth',
+], function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/signup', [AuthController::class, 'signup']);
+
+    Route::group([
+        'middleware' => 'auth:api',
+    ], function () {
+        Route::get('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'getUser']);
+    });
+
+});
+/**
+ * 
+ * Application Routes
+ */
+Route::group([
+    'middleware' => 'auth:api',
+], function () {
+    Route::apiResource('jobs', JobsController::class);
+    Route::apiResource('resumes', ResumeController::class);
+    Route::apiResource('companies', CompanyController::class);
+    Route::apiResource('companies.resumes', CompanyResumeController::class);
+    Route::apiResource('users.jobs', CompanyResumeController::class);
+});
