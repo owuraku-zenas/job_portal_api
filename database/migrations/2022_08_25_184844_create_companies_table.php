@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+            $table->string('website');
+            $table->longText('about');
+            $table->string('linked_in');
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
             $table->timestamps();
         });
     }
