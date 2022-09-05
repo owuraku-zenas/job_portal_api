@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('rate');
             $table->string('location');
             $table->string('job_type');
-            $table->int('workspace');
+            $table->integer('workspace');
             $table->json('responsibilities');
             $table->json('requirements');
             $table->timestamps();
