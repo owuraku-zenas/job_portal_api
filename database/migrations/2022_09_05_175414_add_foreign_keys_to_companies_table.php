@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_jobs', function (Blueprint $table) {
-            $table->id();
+        Schema::table('companies', function (Blueprint $table) {
+            //
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('job_id');
-            $table->timestamps();
-
+            $table->unsignedInteger('category_id');
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('job_id')->references('id')->on('jobs');
-
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -33,6 +30,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_jobs');
+        Schema::table('companies', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use LDAP\ResultEntry;
 
 class User extends Authenticatable
 {
@@ -41,4 +42,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function company() {
+        return $this->hasOne(Company::class);
+    }
+
+    public function resumes() {
+        return $this->hasMany(Resume::class);
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(CompanyResume::class);
+    }
 }

@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('company_resumes', function (Blueprint $table) {
-            $table->id();
+        Schema::table('jobs', function (Blueprint $table) {
             $table->unsignedInteger('company_id');
-            $table->unsignedInteger('resume_id');
-            $table->timestamps();
+
 
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('resume_id')->references('id')->on('resumes');
         });
     }
 
@@ -31,6 +28,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_resumes');
+        Schema::table('jobs', function (Blueprint $table) {
+            //
+        });
     }
 };
