@@ -3,13 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ForgotPassword;
 use App\Models\User;
-use Carbon\Carbon;
 use Exception;
-use http\Message;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +21,8 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|max:255',
+                'user_type' => 'required|string',
+                'location' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -42,12 +39,15 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => $password,
                 'remember_token' => $remember_token,
+                'user_type' => $request->user_type,
+                'location' => $request->location
             ]);
 
             return response()->json([
                 'status_code' => 200,
                 'message' => 'Registration Successful',
             ]);
+
         } catch (Exception $errors) {
 
             return response()->json([
