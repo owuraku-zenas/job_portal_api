@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Job;
 use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class JobsController extends Controller
@@ -52,7 +50,7 @@ class JobsController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255',
-                'desctription' => 'required|string',
+                'description' => 'required|string',
                 'hours' => 'required|string',
                 'rate' => 'required|string',
                 'location' => 'required|string',
@@ -62,13 +60,13 @@ class JobsController extends Controller
                 'requirements' => 'required|array'
             ]);
 
-            if ($validator->falis()) {
+            if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'data' => $validator->errors()->all()
                 ], 422);
             }
-
+            
             $company = User::findOrFail($request->user()->id)->company;
 
             $job = new Job();
@@ -88,13 +86,13 @@ class JobsController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $job,
-                'message' => "Jobs retrieved successfully"
+                'message' => "Job created successfully"
             ]);
         } catch (Exception $error) {
             return response()->json([
                 'success' => false,
-                'data' => $error,
-                'message' => "Falied to retrieve jobs"
+                'data' => $error->getMessage(),
+                'message' => "Falied to create job"
             ], 500);
         }
     }
