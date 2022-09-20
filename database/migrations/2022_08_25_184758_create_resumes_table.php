@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('job_title');
             $table->json('tags');
             $table->json('educations');
-            $table->json('person_projects')->nullable();
+            $table->json('personal_projects')->nullable();
             $table->json('job_experiences')->nullable();
             $table->string('website')->nullable();
             $table->timestamps();
