@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Resume;
-use Illuminate\Support\Facades\Request;
+use App\Models\User;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
@@ -15,17 +19,30 @@ class ResumeController extends Controller
      */
     public function index()
     {
-        //
-    }
+        try {
+            $user = User::find(auth()->guard('api')->user()->id);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+            if($user->user_type == "recruiter") {
+                $resumes = Resume::all();
+            } elseif($user->user_type == "recuit") {
+
+                $resumes = Resume::where('user_id', auth()->guard('api')->user()->id)->get();
+            }
+
+             $response = [
+                'success' => true,
+                'data' => $resumes,
+                'message' => "Jobs retrieved successfully"
+            ];
+
+            return response()->json($response, 200);
+        } catch (Exception $error) {
+             return response()->json([
+                'success' => false,
+                'data' => $error->getMessage(),
+                'message' => "Falied to retrieve jobs"
+            ], 500);
+        }
     }
 
     /**
@@ -36,7 +53,52 @@ class ResumeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'about' => 'required|string|max:255',
+                'rate' => 'required|string',
+                'job_title' => 'required|string',
+                'tags' => 'required|array',
+                'educations' => 'required|array',
+                'personal_projects' => 'array',
+                'job_experiences' => 'array',
+                'website' => 'string'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'data' => $validator->errors()->all()
+                ], 422);
+            }
+
+            $resume = "";
+
+            $resume = Resume::create([
+                'about' => $request->about,
+                'email' => $request->user()->email,
+                'rate' => $request->rate,
+                'job_title' => $request->job_title,
+                'tags' => json_encode($request->tags),
+                'educations' => json_encode($request->educations),
+                'personal_projects' => json_encode($request->personal_projects),
+                'job_experiences' => json_encode($request->job_experiences),
+                'website' => $request->website,
+                'user_id' => $request->user()->id,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $resume,
+                'message' => "Resume created successfully"
+            ]);
+        } catch (Exception $error) {
+            return response()->json([
+                'success' => false,
+                'data' => $error->getMessage(),
+                'message' => "Falied to create resume"
+            ], 500);
+        }
     }
 
     /**
