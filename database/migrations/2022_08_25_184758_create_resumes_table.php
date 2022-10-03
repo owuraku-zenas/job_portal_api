@@ -24,6 +24,8 @@ return new class extends Migration
             $table->json('personal_projects')->nullable();
             $table->json('job_experiences')->nullable();
             $table->string('website')->nullable();
+            $table->string('linked_in')->nullable();
+            $table->string('twitter')->nullable();
             $table->timestamps();
         });
     }
