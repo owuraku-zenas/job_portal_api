@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -43,11 +44,22 @@ class AuthController extends Controller
                 'location' => $request->location
             ]);
 
+
+            if ($request->user_type == "recruiter") {
+                $company = Company::create([
+                    'website' => $request->website,
+                    'about' =>  $request->about,
+                    'linked_in' =>  $request->linked_in,
+                    'user_id' => $user->id,
+                    'instagram' =>  $request->instagram ? $request->instagram : null,
+                    'twitter' => $request->twitter ? $request->twitter : null,
+                ]);
+            }
+
             return response()->json([
                 'status_code' => 200,
                 'message' => 'Registration Successful',
             ]);
-
         } catch (Exception $errors) {
 
             return response()->json([

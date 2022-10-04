@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('companies', function (Blueprint $table) {
             //
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('category_id');
+            $table->unsignedInteger('category_id')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
