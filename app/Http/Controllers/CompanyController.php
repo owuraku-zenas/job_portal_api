@@ -88,8 +88,8 @@ class CompanyController extends Controller
                 'linked_in' =>  $request->linked_in,
                 'user_id' => $request->user()->id,
                 'category_id' => $category->id,
-                'instagram' =>  $request->instagram || null,
-                'twitter' => $request->twitter || null,
+                'instagram' =>  $request->instagram ? $request->instagram : null,
+                'twitter' => $request->twitter ? $request->twitter : null,
             ]);
 
             return response()->json([
@@ -101,7 +101,7 @@ class CompanyController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => $error->getMessage(),
-                'message' => "Falied to create job"
+                'message' => "Falied to create Company"
             ], 500);
         }
     }
