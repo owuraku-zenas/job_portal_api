@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('hours');
             $table->string('rate');
             $table->string('location');
             $table->string('job_type');

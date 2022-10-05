@@ -51,7 +51,6 @@ class JobsController extends Controller
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
-                'hours' => 'required|string',
                 'rate' => 'required|string',
                 'location' => 'required|string',
                 'job_type' => 'required|string',
@@ -73,7 +72,6 @@ class JobsController extends Controller
 
             $job->title = $request->title;
             $job->description = $request->description;
-            $job->hours = $request->hours;
             $job->rate = $request->rate;
             $job->location = $request->location;
             $job->job_type = $request->job_type;
