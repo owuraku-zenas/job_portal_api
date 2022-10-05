@@ -136,9 +136,12 @@ class JobsController extends Controller
     public function show(Job $job)
     {
         try {
+            $response = $job;
+            $response->responsibilities = json_decode($job->responsibilities);
+            $response->requirements = json_decode($job->requirements);
             return response()->json([
                 'success' => true,
-                'data' => $job,
+                'data' => $response,
                 'message' => "Jobs retrieved successfully"
             ]);
         } catch (Exception $error) {
