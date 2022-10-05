@@ -20,16 +20,9 @@ class ResumeController extends Controller
     public function index()
     {
         try {
-            $user = User::find(auth()->guard('api')->user()->id);
+            $resumes = Resume::all();
 
-            if($user->user_type == "recruiter") {
-                $resumes = Resume::all();
-            } elseif($user->user_type == "recuit") {
-
-                $resumes = Resume::where('user_id', auth()->guard('api')->user()->id)->get();
-            }
-
-             $response = [
+            $response = [
                 'success' => true,
                 'data' => $resumes,
                 'message' => "Jobs retrieved successfully"
@@ -37,12 +30,35 @@ class ResumeController extends Controller
 
             return response()->json($response, 200);
         } catch (Exception $error) {
-             return response()->json([
+            return response()->json([
                 'success' => false,
                 'data' => $error->getMessage(),
                 'message' => "Falied to retrieve jobs"
             ], 500);
         }
+    }
+
+    public function user_resumes()
+    {
+        try {
+
+            $resumes = Resume::where("company_id", Auth::user()->id)->get();
+
+            $response = [
+                'success' => true,
+                'data' => $resumes,
+                'message' => "Jobs retrieved successfully"
+            ];
+
+            return response()->json($response, 200);
+        } catch (Exception $error) {
+
+            return response()->json([
+                'success' => false,
+                'data' => $error->getMessage(),
+                'message' => "Falied to retrieve jobs"
+            ], 500);
+        } 
     }
 
     /**

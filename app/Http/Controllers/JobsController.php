@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Job;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class JobsController extends Controller
@@ -33,7 +35,37 @@ class JobsController extends Controller
 
             return response()->json([
                 'success' => false,
-                'data' => $error,
+                'data' => $error->getMessage(),
+                'message' => "Falied to retrieve jobs"
+            ], 500);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function company_jobs()
+    {
+        //
+        try {
+
+            $jobs = Job::where("company_id", Auth::user()->id)->get();
+
+            $response = [
+                'success' => true,
+                'data' => $jobs,
+                'message' => "Jobs retrieved successfully"
+            ];
+
+            return response()->json($response, 200);
+        } catch (Exception $error) {
+
+            return response()->json([
+                'success' => false,
+                'data' => $error->getMessage(),
                 'message' => "Falied to retrieve jobs"
             ], 500);
         }

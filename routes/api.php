@@ -40,7 +40,6 @@ Route::group([
         Route::get('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [AuthController::class, 'getUser']);
     });
-
 });
 /**
  * 
@@ -49,9 +48,18 @@ Route::group([
 Route::group([
     'middleware' => 'auth:api',
 ], function () {
-    Route::apiResource('jobs', JobsController::class);
-    Route::apiResource('resumes', ResumeController::class);
+    Route::apiResource('jobs', JobsController::class)->except([
+        'index',
+    ]);
+    Route::get('/company/jobs', [JobsController::class, 'company_jobs']);
+    Route::apiResource('resumes', ResumeController::class)->except([
+        'index'
+    ]);
+    Route::get('user/resumes', [ResumeController::class, 'user_resumes']);
     Route::apiResource('companies', CompanyController::class);
     Route::apiResource('companies.resumes', CompanyResumeController::class);
     Route::apiResource('users.jobs', CompanyResumeController::class);
 });
+
+Route::get('/jobs', [JobsController::class, 'index']);
+Route::get('/resumes', [JobsController::class, 'index']);
